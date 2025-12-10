@@ -201,3 +201,165 @@ footer {
         transform:translateY(0) scale(1);
     }
 }
+
+/* Hamburger Menu */
+.hamburger {
+    display:none;
+    flex-direction:column;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:5px;
+    z-index:1001;
+}
+.hamburger span {
+    width:28px;
+    height:3px;
+    background:var(--wine);
+    margin:4px 0;
+    transition:0.3s;
+    border-radius:2px;
+}
+.hamburger.active span:nth-child(1) {
+    transform:rotate(45deg) translate(8px, 8px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity:0;
+}
+.hamburger.active span:nth-child(3) {
+    transform:rotate(-45deg) translate(8px, -8px);
+}
+
+/* Overlay */
+.overlay {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    z-index:999;
+    opacity:0;
+    transition:opacity 0.3s ease;
+}
+.overlay.active {
+    display:block;
+    opacity:1;
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    header {
+        padding:15px 20px;
+    }
+    
+    header h1 {
+        font-size:20px;
+    }
+    
+    .hamburger {
+        display:flex;
+    }
+    
+    nav {
+        position:fixed;
+        top:0;
+        right:-280px;
+        width:280px;
+        height:100vh;
+        background:var(--white);
+        box-shadow:-2px 0 10px rgba(0,0,0,0.2);
+        display:flex;
+        flex-direction:column;
+        padding:80px 30px 30px;
+        transition:right 0.3s ease;
+        z-index:1000;
+        margin-top:0;
+    }
+    
+    nav.active {
+        right:0;
+    }
+    
+    nav a {
+        margin:15px 0;
+        font-size:18px;
+        padding:10px 0;
+        border-bottom:1px solid #f0f0f0;
+    }
+    
+    .section {
+        padding:100px 15px 50px;
+    }
+    
+    h2 {
+        font-size:24px;
+    }
+    
+    .about-box, .extra-box {
+        padding:20px;
+    }
+    
+    .skills-container {
+        gap:10px;
+    }
+    
+    .skill {
+        padding:10px 20px;
+        font-size:14px;
+    }
+    
+    .gallery {
+        gap:15px;
+    }
+    
+    .gallery img {
+        width:calc(50% - 10px);
+        height:200px;
+    }
+    
+    .contact-box a {
+        display:block;
+        margin:10px 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    header h1 {
+        font-size:18px;
+    }
+    
+    .section {
+        padding:90px 10px 40px;
+    }
+    
+    h2 {
+        font-size:22px;
+    }
+    
+    .about-box, .extra-box {
+        padding:15px;
+        font-size:14px;
+    }
+    
+    .skill {
+        padding:8px 15px;
+        font-size:13px;
+    }
+    
+    .gallery img {
+        width:100%;
+        height:250px;
+    }
+    
+    nav {
+        width:240px;
+        right:-240px;
+        padding:70px 20px 20px;
+    }
+    
+    nav a {
+        font-size:16px;
+    }
+}
