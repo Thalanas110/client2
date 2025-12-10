@@ -40,6 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
                     zIndex: 1000,
                     padding: scrolled ? '15px 30px' : '30px 40px',
                     transition: 'all 0.4s ease',
+                    pointerEvents: isMenuOpen ? 'none' : 'auto' // Disable header interaction when menu is open
                 }}
             >
                 <div
@@ -87,76 +88,97 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
                         ))}
                     </nav>
 
-                    {/* Mobile Menu Button */}
+                    {/* Mobile Menu Button - Only visible when menu is closed */}
                     <button
                         className="hamburger"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        style={{ display: 'none', color: 'var(--wine)' }}
-                        aria-label="Toggle Menu"
+                        onClick={() => setIsMenuOpen(true)}
+                        style={{ display: 'none', color: 'var(--wine)', pointerEvents: 'auto' }}
+                        aria-label="Open Menu"
                     >
-                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        <Menu size={28} />
                     </button>
                 </div>
             </motion.header>
 
-            {/* Mobile Nav Overlay */}
+            {/* Full Screen Mobile Nav Overlay */}
             <AnimatePresence>
                 {isMenuOpen && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsMenuOpen(false)}
-                            style={{
-                                position: 'fixed',
-                                inset: 0,
-                                background: 'rgba(0,0,0,0.3)',
-                                backdropFilter: 'blur(4px)',
-                                zIndex: 998
-                            }}
-                        />
-                        <motion.div
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            style={{
-                                position: 'fixed',
-                                top: 0,
-                                right: 0,
-                                width: '300px',
-                                height: '100vh',
-                                background: 'var(--oatmilk)',
-                                padding: '80px 40px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px',
-                                zIndex: 999,
-                                boxShadow: '-10px 0 30px rgba(0,0,0,0.1)'
-                            }}
-                        >
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            background: 'var(--oatmilk)',
+                            zIndex: 2000,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            padding: '30px',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {/* Mobile Menu Header */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '60px' }}>
+                            <span style={{
+                                fontSize: '1.5rem',
+                                fontFamily: "'Playfair Display', serif",
+                                fontWeight: 700,
+                                color: 'var(--wine)'
+                            }}>
+                                Ryn's Journal
+                            </span>
+                            <button
+                                onClick={() => setIsMenuOpen(false)}
+                                style={{
+                                    padding: '10px',
+                                    background: 'var(--wine-soft)',
+                                    borderRadius: '50%',
+                                    color: 'var(--wine)',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <X size={28} />
+                            </button>
+                        </div>
+
+                        {/* Mobile Menu Links */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', alignItems: 'center' }}>
                             {navLinks.map((link, i) => (
                                 <motion.a
                                     key={link.name}
                                     href={link.href}
                                     onClick={() => setIsMenuOpen(false)}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 + (i * 0.1) }}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 + (i * 0.1), duration: 0.5, ease: "easeOut" }}
                                     style={{
-                                        fontSize: '1.5rem',
+                                        fontSize: '2rem',
                                         fontFamily: "'Playfair Display', serif",
+                                        fontWeight: 600,
                                         color: 'var(--wine)',
-                                        borderBottom: '1px solid rgba(0,0,0,0.05)',
-                                        paddingBottom: '15px'
+                                        textDecoration: 'none'
                                     }}
                                 >
                                     {link.name}
                                 </motion.a>
                             ))}
-                        </motion.div>
-                    </>
+                        </div>
+
+                        {/* Decoration */}
+                        <div style={{
+                            position: 'absolute',
+                            bottom: '-50px',
+                            right: '-50px',
+                            width: '200px',
+                            height: '200px',
+                            background: 'var(--matcha-light)',
+                            opacity: 0.2,
+                            borderRadius: '50%',
+                            filter: 'blur(40px)'
+                        }} />
+                    </motion.div>
                 )}
             </AnimatePresence>
 
