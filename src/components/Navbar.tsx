@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface NavbarProps {
     isMenuOpen: boolean;
@@ -11,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -25,118 +26,162 @@ const Navbar: React.FC<NavbarProps> = ({ isMenuOpen, setIsMenuOpen }) => {
         { name: 'Contact', href: '#contact' },
     ];
 
-    const handleLinkClick = () => {
-        setIsMenuOpen(false);
-    };
-
     return (
         <>
-            <header
+            <motion.header
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.5 }}
                 style={{
                     position: 'fixed',
                     top: 0,
                     left: 0,
                     width: '100%',
-                    padding: scrolled ? '15px 30px' : '25px 30px',
-                    background: scrolled ? 'var(--white)' : 'rgba(255, 255, 255, 0.8)',
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: scrolled ? 'var(--shadow-sm)' : 'none',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
                     zIndex: 1000,
-                    transition: 'var(--transition)'
+                    padding: scrolled ? '15px 30px' : '30px 40px',
+                    transition: 'all 0.4s ease',
                 }}
             >
-                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>ABOUT ME</h1>
-
-                <button
-                    className="hamburger"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    style={{ display: 'none', cursor: 'pointer', color: 'var(--wine)' }}
-                    aria-label="Toggle Menu"
+                <div
+                    className={scrolled ? "glass" : ""}
+                    style={{
+                        maxWidth: '1200px',
+                        margin: '0 auto',
+                        background: scrolled ? 'rgba(255, 255, 255, 0.65)' : 'transparent',
+                        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+                        borderRadius: scrolled ? 'var(--radius-full)' : '0',
+                        padding: '10px 30px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        boxShadow: scrolled ? 'var(--shadow-sm)' : 'none',
+                        border: scrolled ? '1px solid rgba(255,255,255,0.4)' : 'none'
+                    }}
                 >
-                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
+                    <a href="#" style={{
+                        fontSize: '1.5rem',
+                        fontFamily: "'Playfair Display', serif",
+                        fontWeight: 700,
+                        color: 'var(--wine)',
+                        letterSpacing: '-0.5px'
+                    }}>
+                        Ryn's Journal
+                    </a>
 
-                {/* Desktop Nav */}
-                <nav className="desktop-nav">
-                    {navLinks.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            style={{
-                                margin: '0 15px',
-                                fontWeight: 500,
-                                color: 'var(--text-main)',
-                                transition: 'var(--transition)'
-                            }}
-                            className="nav-link"
-                        >
-                            {link.name}
-                        </a>
-                    ))}
-                </nav>
-            </header>
+                    {/* Desktop Nav */}
+                    <nav className="desktop-nav" style={{ display: 'flex', gap: '30px' }}>
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.name}
+                                href={link.href}
+                                className="nav-link"
+                                style={{
+                                    fontSize: '0.95rem',
+                                    fontWeight: 500,
+                                    color: 'var(--text-main)',
+                                    position: 'relative'
+                                }}
+                            >
+                                {link.name}
+                            </a>
+                        ))}
+                    </nav>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        className="hamburger"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        style={{ display: 'none', color: 'var(--wine)' }}
+                        aria-label="Toggle Menu"
+                    >
+                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
+            </motion.header>
 
             {/* Mobile Nav Overlay */}
-            <div
-                className={`mobile-nav-overlay ${isMenuOpen ? 'active' : ''}`}
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    right: isMenuOpen ? 0 : '-100%',
-                    width: '280px', // Fixed width for mobile drawer
-                    height: '100vh',
-                    background: 'var(--white)',
-                    boxShadow: '-5px 0 15px rgba(0,0,0,0.1)',
-                    padding: '80px 30px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    zIndex: 999,
-                    transition: 'right 0.3s ease-in-out'
-                }}
-            >
-                {navLinks.map((link) => (
-                    <a
-                        key={link.name}
-                        href={link.href}
-                        onClick={handleLinkClick}
-                        style={{
-                            fontSize: '1.2rem',
-                            padding: '15px 0',
-                            borderBottom: '1px solid #eee',
-                            color: 'var(--text-main)'
-                        }}
-                    >
-                        {link.name}
-                    </a>
-                ))}
-            </div>
-
-            {/* Overlay Backdrop */}
-            {isMenuOpen && (
-                <div
-                    onClick={() => setIsMenuOpen(false)}
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        background: 'rgba(0,0,0,0.4)',
-                        zIndex: 998
-                    }}
-                />
-            )}
+            <AnimatePresence>
+                {isMenuOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsMenuOpen(false)}
+                            style={{
+                                position: 'fixed',
+                                inset: 0,
+                                background: 'rgba(0,0,0,0.3)',
+                                backdropFilter: 'blur(4px)',
+                                zIndex: 998
+                            }}
+                        />
+                        <motion.div
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            style={{
+                                position: 'fixed',
+                                top: 0,
+                                right: 0,
+                                width: '300px',
+                                height: '100vh',
+                                background: 'var(--oatmilk)',
+                                padding: '80px 40px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '20px',
+                                zIndex: 999,
+                                boxShadow: '-10px 0 30px rgba(0,0,0,0.1)'
+                            }}
+                        >
+                            {navLinks.map((link, i) => (
+                                <motion.a
+                                    key={link.name}
+                                    href={link.href}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.1 + (i * 0.1) }}
+                                    style={{
+                                        fontSize: '1.5rem',
+                                        fontFamily: "'Playfair Display', serif",
+                                        color: 'var(--wine)',
+                                        borderBottom: '1px solid rgba(0,0,0,0.05)',
+                                        paddingBottom: '15px'
+                                    }}
+                                >
+                                    {link.name}
+                                </motion.a>
+                            ))}
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
 
             <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none; }
-          .hamburger { display: block !important; }
-        }
-        .nav-link:hover { color: var(--wine) !important; }
-      `}</style>
+                @media (max-width: 768px) {
+                    .desktop-nav { display: none !important; }
+                    .hamburger { display: block !important; }
+                }
+                .nav-link::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -4px;
+                    left: 0;
+                    width: 0%;
+                    height: 2px;
+                    background: var(--wine);
+                    transition: width 0.3s ease;
+                }
+                .nav-link:hover::after {
+                    width: 100%;
+                }
+                .nav-link:hover {
+                    color: var(--wine) !important;
+                }
+            `}</style>
         </>
     );
 };
