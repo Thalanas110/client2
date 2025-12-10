@@ -15,6 +15,7 @@ function App() {
   return (
     <div className="App">
       <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+
       <main>
         <Hero />
         <Skills />
